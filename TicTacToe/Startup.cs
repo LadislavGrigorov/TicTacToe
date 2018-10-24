@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.DependencyInjection;
+using TicTacToe.Extensions;
 using TicTacToe.Services;
 
 namespace TicTacToe
@@ -30,11 +32,18 @@ namespace TicTacToe
 
             app.UseStaticFiles();
 
+            app.UseCommunicationMiddleware();
+
+            var options = new RewriteOptions()
+                .AddRewrite("NewUser", "/UserRegistration/Index", false);
+
+            app.UseRewriter(options);
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
