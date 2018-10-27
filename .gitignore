@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 /TicTacToe/wwwroot/lib
+/TicTacToe/wwwroot/js
+/TicTacToe/wwwroot/css/site.min.css

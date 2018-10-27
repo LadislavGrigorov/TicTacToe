@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TicTacToe.Models;
@@ -28,10 +26,22 @@ namespace TicTacToe.Controllers
             if (ModelState.IsValid)
             {
                 await _userService.RegisterUser(userModel);
-                return Content($"User {userModel.FirstName} {userModel.LastName} has been registered sucessfully");
+                return RedirectToAction(nameof(EmailConfirmation), new { userModel.Email });
             }
+            else 
+                return View(userModel);
+        }
 
-            return View(userModel);
+        [HttpGet]
+        public async Task<IActionResult> EmailConfirmation(string email)
+        {
+            var user = await _userService.GetUserByEmail(email);
+            if (user?.IsEmailConfirmed == true)
+                return RedirectToAction("Index", "GameInvitation",
+               new { email });
+
+            ViewBag.Email = email;
+            return View();
         }
     }
 }
